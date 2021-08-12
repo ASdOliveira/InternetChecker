@@ -14,10 +14,10 @@ mycursor = mydb.cursor(cursor_factory=RealDictCursor)
 app = FastAPI()
 
 
-
 @app.get("/")
 async def root():
     status = helper.isStatusOK(mycursor)
+    closeConn()
     return {"HasInternet": status}
 
 
@@ -25,4 +25,8 @@ async def root():
 async def create_user(item: Item):
     helper.updateData(mycursor, item.randomId)
     mydb.commit()
+    mydb.close()
     return item
+
+def closeConn():
+    mydb.close()
